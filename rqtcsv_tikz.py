@@ -27,8 +27,7 @@ except IOError:
     exit()
 
 print("Converting rqt_plot csv to tikzpicture .tex file ...")
-colors = ["black", "yellow", "green", "blue", "purple", "cyan", "magenta"]
-
+colors = ["green", "yellow", "purple", "black", "red", "blue", "magenta"]
 # get labels
 labels = list(dataframe.columns.values)
 time_labels = labels[::2]  
@@ -44,18 +43,21 @@ with open(tex_filename, 'w') as f:
     print("\\centering")
     #print("\\resizebox{\\textwidth}{!}{")
     print("\t\\begin{tikzpicture}")
-    print("\t\t\\begin{{axis}}[ xlabel={}, ylabel={}, width=\\textwidth, height=7cm]".format('time', 'y'))
+    print("\t\t\\begin{{axis}}[ xlabel={}, ylabel={},enlargelimits=false, width=\\textwidth, height=7cm]".format('time', 'y'))
 
     i = 0
     for data_label in data_labels:
         nr_of_datapoints = dataframe[data_label].shape[0]
         print("\t\t\\addplot[smooth, color={}]".format(colors[i%len(colors)]))
         print("\t\t\tplot coordinates {")
-        
+
         for datapoint in range(nr_of_datapoints):
             valid = True
-            x_ = dataframe[time_labels[i]].loc[datapoint] 
-            y_ = dataframe[data_label].loc[datapoint]
+            delx = dataframe[time_labels[0]].loc[0];
+            x_ = dataframe[time_labels[i]].loc[datapoint];
+            if x_!= " " :
+               x_ =float(dataframe[time_labels[i]].loc[datapoint])-delx;
+               y_ = dataframe[data_label].loc[datapoint]
 
             
 
